@@ -26,9 +26,10 @@ urlpatterns = [
     path('actualizar/<int:id>', views.actualizar_inscripcion),
     # class base view
     path('inscripciones_class/', views.ListaInscripciones.as_view()),
+    path('inscripciones_class/<int:id>', views.DetalleInscripcion.as_view()),
     # function base view
-    path('inscripciones_fun/', views.inscripcion_list),
-    path('inscripciones_fun/<int:id>', views.inscripcion_detalle),
+    path('instituciones_fun/', views.institucion_list),
+    path('instituciones_fun/<int:id>', views.institucion_detalle),
     # api
     path('inscripciones_api/', views.inscripciones_api),
 

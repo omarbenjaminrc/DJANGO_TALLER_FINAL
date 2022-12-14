@@ -1,9 +1,9 @@
 
 from django.shortcuts import render,redirect
-from django_seminario_app.models import Inscripcion
+# from django_seminario_app.models import Inscripcion
 from django_seminario_app.forms import Form_inscripcion
-from .serialiazers import InscripcionSerializer
-from .models import Inscripcion
+from .serialiazers import InscripcionSerializer , InstitucionSerializer
+from .models import Inscripcion, Institucion
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -70,65 +70,65 @@ class ListaInscripciones(APIView):
             return Response(serial.data, status=status.HTTP_201_CREATED)
         return Response(serial.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class DetalleInscripcion(APIView):
-#     def get_object(self, pk):
-#         try:
-#             return Inscripcion.objects.get(id=pk)
-#         except Inscripcion.DoesNotExist:
-#             return Http404
+class DetalleInscripcion(APIView):
+    def get_object(self, pk):
+        try:
+            return Inscripcion.objects.get(id=pk)
+        except Inscripcion.DoesNotExist:
+            return Http404
 
-#     def get(self, request, pk):
-#         inscripcion = self.get_object(pk)
-#         serial = InscripcionSerializer(inscripcion)
-#         return Response(serial.data)
+    def get(self, request, pk):
+        inscripcion = self.get_object(pk)
+        serial = InscripcionSerializer(inscripcion)
+        return Response(serial.data)
 
-#     def put(self, request, pk):
-#         inscripcion = self.get_object(pk)
-#         serial = InscripcionSerializer(inscripcion, data=request.data)
-#         if serial.is_valid():
-#             serial.save()
-#             return Response(serial.data)
-#         return Response(serial.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, pk):
+        inscripcion = self.get_object(pk)
+        serial = InscripcionSerializer(inscripcion, data=request.data)
+        if serial.is_valid():
+            serial.save()
+            return Response(serial.data)
+        return Response(serial.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request, pk):
-#         inscripcion = self.get_object(pk)
-#         inscripcion.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, pk):
+        inscripcion = self.get_object(pk)
+        inscripcion.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # functio base view
 
 @api_view(['GET','POST'])
-def inscripcion_list (request):
+def institucion_list (request):
     if request.method == 'GET':
-        inscripcion = Inscripcion.objects.all()
-        serial = InscripcionSerializer(inscripcion , many=True)
+        institucion = Institucion.objects.all()
+        serial = InstitucionSerializer(institucion , many=True)
         return Response(serial.data)
 
     elif request.method == 'POST':
-        serial = InscripcionSerializer(data = request.data)
+        serial = InstitucionSerializer(data = request.data)
         if serial.is_valid():
             serial.save()
             return Response(serial.data, status=status.HTTP_201_CREATED)
         return Response(serial.errors,status=status.HTTP_400_BAD_REQUEST) 
 
 @api_view(['GET','PUT','DELETE'])
-def inscripcion_detalle(request,id):
+def institucion_detalle(request,id):
     try:
-        inscripcion = Inscripcion.objects.get(pk = id)
-    except inscripcion.DoesNotExist:
+        institucion = Institucion.objects.get(pk = id)
+    except institucion.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serial = InscripcionSerializer(inscripcion)
+        serial = InstitucionSerializer(institucion)
         return Response(serial.data)
 
     if request.method == 'PUT':
-        serial = InscripcionSerializer(inscripcion,data=request.data)
+        serial = InstitucionSerializer(institucion,data=request.data)
         if serial.is_valid():
             serial.save()
             return Response(serial.data)
         return Response(serial.data, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':
-        inscripcion.delete()
+        institucion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
